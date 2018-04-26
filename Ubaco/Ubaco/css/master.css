@@ -1,0 +1,10 @@
+﻿.mt-10 {margin-top:100px;}
+.mt-20 {margin-top:200px;}
+.page-item.active .page-link {
+    background-color: #128F76;
+    border-color: #128F76;
+}
+.page-link {
+    color:#128F76;
+}
+.mt-010 {margin-top:-100px;}

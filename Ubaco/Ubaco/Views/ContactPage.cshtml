@@ -1,0 +1,72 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ContactPage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@using Ubaco.Helper;
+@{
+    Layout = "Master.cshtml";
+}
+
+<header class="masthead bg-primary text-white text-center">
+    <div class="container">
+        <h1 class="text-uppercase mb-0">@CurrentPage.Name</h1>
+    </div>
+</header>
+
+<section class="@CurrentPage.Name" id="@CurrentPage.Name">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row justify-content-center">
+                <div class="media-container-column col-lg-8">
+                    @{
+                        if (IsPost)
+                        {
+                            if (!string.IsNullOrEmpty(Request.Form["name"]) && !string.IsNullOrEmpty(Request.Form["email"]) && !string.IsNullOrEmpty(Request.Form["message"]))
+                            {
+                                if (Mail.MailSender(Request.Form["email"], CurrentPage.ReceiverEmail, "Besked fra:" + Request.Form["name"], Request.Form["message"]))
+                                {
+                                    <div class="alert alert-success alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>Success!</strong> Tak for din henvendelse, vi snakkes ved.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>Problemer!</strong> Der skete en fejl, prøv igen.
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                            }
+                        }
+                    }
+                    <form method="post">
+                        <div class="row row-sm-offset">
+                            <div class="col-md-6 multi-horizontal" data-for="name">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="name-form1-2w">Name</label>
+                                    <input type="text" class="form-control" name="name" required="">
+                                </div>
+                            </div>
+                            <div class="col-md-6 multi-horizontal" data-for="email">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="email-form1-2w">Email</label>
+                                    <input type="email" class="form-control" name="email" required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" data-for="message">
+                            <label class="form-control-label mbr-fonts-style display-7" for="message-form1-2w">Message</label>
+                            <textarea type="text" class="form-control" name="message" rows="7" data-form-field="Message" id="message-form1-2w"></textarea>
+                        </div>
+
+                        <span class="input-group-btn">
+                            <button href="" type="submit" class="btn btn-primary btn-form display-4">SEND FORM</button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

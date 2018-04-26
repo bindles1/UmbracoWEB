@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.TextPage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+<header class="masthead bg-primary text-white text-center">
+    <div class="container">
+        <h1 class="text-uppercase mb-0">@CurrentPage.Name</h1>
+    </div>
+</header>
+<section class="@CurrentPage.Name" id="@CurrentPage.Name">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+            </div>
+        </div>
+    </div>
+</section>

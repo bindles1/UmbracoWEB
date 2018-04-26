@@ -1,0 +1,62 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.BlogItem>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+    Layout = "Master.cshtml";
+}
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/da_DK/sdk.js#xfbml=1&version=v2.12&appId=132532600686071&autoLogAppEvents=1';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Page Content -->
+<header class="masthead bg-primary text-white text-center">
+    <div class="container">
+        <h1 class="text-uppercase mb-0">@Umbraco.Field("blogTitle")</h1>
+        <hr class="star-light">
+        <h2 class="font-weight-light mb-0">           
+            by  @Umbraco.Field("creatorName")
+        </h2>
+        <p>Posted on @Umbraco.Field("displayDate", formatAsDate: true)</p>
+    </div>
+</header>
+<div class="container">
+
+    <div class="row justify-content-center align-items-center">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-10 mt-010">
+            <!-- Preview Image -->
+            <img class="img-fluid rounded w-100" src="@Model.Content.GetCropUrl("blogImage", "800x400")" alt="">
+
+            <hr>
+
+            <!-- Post Content -->
+            <p>
+                @Umbraco.Field("BlogBodyText")
+            </p>
+            <hr>
+
+            <!-- Comments Form -->
+            <div class="card my-4">
+                <h5 class="card-header">Leave a Comment:</h5>
+                <div class="card-body">
+                    <div class="fb-comments" data-href="http://kbweb.dk/blog/@CurrentPage.Id" data-width="100%" data-numposts="3"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+@section styles {
+}

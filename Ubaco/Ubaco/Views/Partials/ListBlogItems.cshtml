@@ -1,0 +1,100 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using Ubaco.Helper;
+
+@{
+    var selection = Model.Content.Site().FirstChild("blogPage").Children("blogItem")
+        .Where(x => x.IsVisible())
+        .OrderBy("CreateDate desc");
+}
+
+@{
+    var pageSize = 3;
+    if (Model.Content.HasValue("numberOfItemsPerPage"))
+    {
+        pageSize = Model.Content.GetPropertyValue<int>("numberOfItemsPerPage");
+    }
+    var page = 1; int.TryParse(Request.QueryString["page"], out page);
+    var items = Umbraco.TypedContent(Model.Content.Id).Children.Where(x => x.DocumentTypeAlias == "blogItem" && x.IsVisible());
+    var totalPages = (int)Math.Ceiling((double)items.Count() / (double)pageSize);
+
+    if (page > totalPages)
+    {
+        page = totalPages;
+    }
+    else if (page < 1)
+    {
+        page = 1;
+    }
+    var i = 1;
+
+        <!-- Displays a message if there are no posts to show -->
+    if (selection.Count() == 0)
+    {
+        <div>
+            <h5>
+                Oops! There are no posts to show.
+            </h5>
+        </div>
+    }
+    else
+    {
+            <!-- If there are posts to show, show as normal -->
+        foreach (var item in selection.Skip((page - 1) * pageSize).Take(pageSize))
+        {
+            <div class="card mb-4">
+
+
+                <img class="card-img-top" src="@item.GetCropUrl("blogImage", "350x250")" />
+
+
+                <div class="card-body">
+                    <h2 class="card-title">@item.GetPropertyValue("BlogTitle")</h2>
+
+                    @{
+                        var body = Umbraco.Truncate(item.GetPropertyValue("BlogBodyText").ToString(), 280, true);
+                    }
+                    <p class="card-text">@Umbraco.StripHtml(body)</p>
+
+
+                    <a href="@item.Url" class="btn btn-primary">Read More &rarr;</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Posted on @Umbraco.Field("displayDate", formatAsDate: true) by
+                    <a href="#">@item.CreatorName</a>
+                </div>
+            </div>
+                                i = i + 1;
+                            }
+                        } }
+<!-- Begin Pagination -->
+@if (totalPages > 1)
+{
+    <nav aria-label="Page navigation" class="justify-content-center row align-items-center">
+        <ul class="pagination">
+            @if (page > 1)
+            {
+                <li class="page-item"><a aria-label="Previous" class="page-link" href="?page=@(page - 1)"><i class="fa fa-long-arrow-left"></i></a></li>
+            }
+            @for (int p = 1; p < totalPages + 1; p++)
+            {
+                var linkClass = (p == page) ? "active" : "disabled";
+                if ((p >= page - 0 && p <= page + 5)
+                    || totalPages <= 7)
+                {
+                    <li class="@Html.Raw(linkClass) page-item">
+                        <a class="page-link" href="?page=@p">@p</a>
+                    </li>
+                }
+            }
+            @if (page < totalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(page + 1)" aria-label="Next">
+                        <i class="fa fa-long-arrow-right"></i>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+<!-- End Pagination -->
